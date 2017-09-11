@@ -11,7 +11,9 @@ Yarn `yarn install` then `yarn run dev` to continually build.
 
 NPM `npm install` then `npm run dev` to continually build.
 
-##Exporting
+You can also run `yarn run dist` or `npm run dist` to generate a minified code version.
+
+## Exporting
 You can export a single frame as a PNG in your browser using "exportImage" from the menu.
 
 You can export a 10s PNG sequence to download using the "exportPngSequnce" menu option.
