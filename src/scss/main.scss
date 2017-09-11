@@ -1,0 +1,24 @@
+/**
+ * RESET
+ */
+
+@import "reset";
+
+/**
+ * BESPOKE
+ */
+
+html {
+    font-family: menu, Helvetica, Arial, sans-serif;
+    background-color: #222222;
+    /* border: 1px solid magenta; */
+}
+
+
+/**
+ * Testing autoprexier
+ */
+
+:fullscreen a {
+    display: flex;
+}

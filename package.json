@@ -1,0 +1,36 @@
+{
+  "name": "buildsystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "webpack-dashboard -- webpack --progress --watch",
+    "dist": "webpack --config webpack.config.dist.js"
+  },
+  "keywords": [],
+  "author": "david.lochhead@gmail.com",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "autoprefixer": "^6.6.1",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015-native-modules": "^6.9.4",
+    "clean-webpack-plugin": "^0.1.16",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^2.0.0-beta.5",
+    "html-webpack-plugin": "^2.29.0",
+    "livereload": "^0.6.0",
+    "lodash": "^4.17.4",
+    "node-sass": "^4.3.0",
+    "optimize-css-assets-webpack-plugin": "^1.3.0",
+    "postcss-loader": "^1.2.2",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1",
+    "webpack": "^3.3.0",
+    "webpack-dashboard": "^0.4.0",
+    "webpack-glsl-loader": "^1.0.1",
+    "webpack-livereload-plugin": "^0.11.0"
+  }
+}

@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <!-- Polyfill -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <!-- /Polyfill -->
+    <!-- Libs -->
+    <script src="js/libs/dat.gui.min.js"></script>
+    <script src="js/libs/three.r87.min.js"></script>
+    <script src="js/libs/stats.min.js"></script>
+    <script src="js/libs/perlin.js"></script>
+    <script src="js/libs/controls/OrbitControls.js"></script>
+    <script src="js/libs/THREE.MeshLine.js"></script>
+    <script src="js/libs/CCapture.all.min.js"></script>
+    <!-- /Libs -->
+    <!-- Analytics -->
+    <script type="text/javascript">
+    // Test to see if we're running on server before loading analytics
+    if (window.location.href.indexOf('://davidlochhead.xyz') > -1) {
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-3547861-5', 'auto');
+        ga('send', 'pageview');
+    } else {
+        console.warn('Skipping analytics load as not running on server.');
+    }
+    </script>
+    <!-- End Analytics Code -->
+    <title>
+        <%= htmlWebpackPlugin.options.title %>
+    </title>
+</head>
+
+<body>
+</body>
+
+</html>
