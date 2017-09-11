@@ -1,5 +1,7 @@
 # Noise Generated Spherical Lines using THREE.js
 
+![ScreenShot](/lines_screenshot.png)
+
 Using noise to generate paths for lines on a sphere.
 
 ## Getting Started
