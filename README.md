@@ -32,6 +32,7 @@ I usually use [Window Resizer for Chrome](https://chrome.google.com/webstore/det
 
 [CCapture.js](https://github.com/spite/ccapture.js)
 
+## License
 
 MIT License
 
