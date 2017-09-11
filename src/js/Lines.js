@@ -7,15 +7,12 @@ const RADIUS = {
   MAX: 20,
 };
 
-const MIN_ROTATION_SPEED = 0.0025;
-
 const perlinDivisor = 100;
 
 const acc = new THREE.Vector3();
 
 let seedHue;
 
-const compColors = [];
 
 const compHueOffset = 0.5;
 const compHueOffsetDeviation = 0.05;
@@ -41,7 +38,6 @@ let paused;
 class Lines {
   constructor() {
     const seed = THREE.Math.randInt(1, 65536);
-    // const seed = 49462;
 
     console.log(`Seed: ${seed}`);
 
@@ -49,21 +45,21 @@ class Lines {
 
     noise.seed(seed);
 
-    seedHue = MathUtils.map(noise.simplex2(128, 128), -1, 1, 0, 1);
+    seedHue = MathUtils.map(noise.simplex2(128, 128), -1, 1, 0, 1); // Generate hue based on seeded noise. Reproducable
     // seedHue = Math.random();
+    
 
+    /**
+     * Generate a color palette based on the seedHue, a complementary hue and two shades of grey. 
+     */
+    
     seedGeneratedPalette = [];
     seedGeneratedPalette.push(this.getColor(seedHue, 0.7, 0.7));
     seedGeneratedPalette.push(this.getColor((seedHue + compHueOffset) % 1, 0.5, 0.5));
     seedGeneratedPalette.push(this.getColor((seedHue + compHueOffset) % 1, 0.2, 0.8));
     seedGeneratedPalette.push(this.getColor((seedHue + compHueOffset) % 1, 0.2, 1));
 
-    compColors.push((seedHue + (compHueOffset - compHueOffsetDeviation)) % 1);
-    compColors.push((seedHue + (compHueOffset)) % 1);
-    compColors.push((seedHue + (compHueOffset + compHueOffsetDeviation)) % 1);
-
     clock = new THREE.Clock();
-
 
     console.log(`seedHue: ${seedHue} On 0 - 1 scale.`);
   }
@@ -73,19 +69,11 @@ class Lines {
   }
 
   set drawPaused(value) {
-    console.log('Lines.js', 'value', value);
     paused = value;
   }
 
-  taper(p) {
-    const turnPoint = 0.1;
-    const before = Easing.easeOutQuint(MathUtils.map(p, 0, turnPoint, 0, 1));
-    const after = Easing.easeOutQuint(MathUtils.map(p, turnPoint, 1, 1, 0));
-    return p < turnPoint ? before : after;
-  }
-
   init() {
-    // sc.init(this.getColor(seedHue, defaults.color.s, 0.2).getHex());
+    // sc.init(this.getColor(seedHue, defaults.color.s, 0.2).getHex()); // You can set the background of the scene to the seed color.
     sc.init();
     sc.gui.add(this, 'drawPaused');
 
@@ -99,38 +87,54 @@ class Lines {
     let curveObject;
 
     for (let i = 0; i < howManyLines; i += 1) {
-      // color = this.getColor(THREE.Math.randFloat(0.6, 0.9), defaults.color.s, THREE.Math.randFloat(0.2, 0.8));
-      color = this.getColor(this.getRandomCompColor(), defaults.color.s, THREE.Math.randFloat(0.2, 0.8));
+      /**
+       * A few different ways of getting a line color.
+       * 1: Totally Random Hue with set Saturation and Lightness between 0.2 - 0.8
+       * 2: Color pulled from the preDefinedPalette array. Yellow, BLue, two grays.
+       * 3: Color pulled from palette generated from the seedHue
+       */
+      
+      // color = this.getColor(THREE.Math.randFloat(0, 1), defaults.color.s, THREE.Math.randFloat(0.2, 0.8));
       // color = this.getRandomPredefinedPaletteColor();
-      // color = this.getRandomSeedGeneratedPaletteColor();
+      color = this.getRandomSeedGeneratedPaletteColor();
 
+      /**
+       * Set the radius of the sphere lines lies on
+       */
+      
       radius = MathUtils.round(THREE.Math.randFloat(RADIUS.MIN, RADIUS.MAX), 1);
+
+      /**
+       * Give line a random seed later use in noise calculations
+       */
+      
       seed = Math.random();
       howManyPoints = THREE.Math.randFloat(100, 200);
+
+      /**
+       * Originally had multiple containers but just using one now
+       */
+      
       container = this.getContainerForRadius(1);
 
       curveObject = this.getLine(color, radius, seed, howManyPoints);
 
+      /**
+       * curveObject can be null if the volume of the line is too small.
+       * We don't want tiny wobbly lines
+       */
+      
       if (curveObject !== null) {
         container.add(curveObject);
-
         curveObjects.push(curveObject);
       }
     }
 
-    curveObject, length = 45; // Limit the max number of lines
+    if (curveObjects.length > 45) curveObjects.length = 45; // Limit the max number of lines
 
     console.log(`Drawing ${curveObjects.length} lines.`);
 
     sc.renderQueue.push(this.render);
-
-    // Object.keys(containers).forEach((key) => {
-    //   console.log('Lines.js', 'key', key);
-    // });
-  }
-
-  getRandomCompColor() {
-    return compColors[THREE.Math.randInt(0, compColors.length - 1)];
   }
 
   getRandomPredefinedPaletteColor() {
@@ -152,7 +156,7 @@ class Lines {
   }
 
   getLine(color, radius, seed = Math.random(), howManyPoints = 100) {
-    const startPos = this.getPos(radius);
+    const startPos = this.getPosOnSphere(radius);
 
     const points = [];
 
@@ -190,8 +194,7 @@ class Lines {
 
     const curve = new THREE.CatmullRomCurve3(points);
     curve.type = 'catmullrom';
-    // curve.tension = THREE.Math.randFloat(0.1, 0.6);
-    curve.tension = THREE.Math.randFloat(0.5, 0.9);
+    curve.tension = THREE.Math.randFloat(0.5, 0.9); // USe a random tension to generate different styles of lines
 
 
     const geometry = new THREE.Geometry();
@@ -202,7 +205,6 @@ class Lines {
     });
 
     const meshLine = new MeshLine();
-    // meshLine.setGeometry(geometry, this.taper);
     meshLine.setGeometry(geometry);
 
     const meshLineMaterial = new MeshLineMaterial({
@@ -231,6 +233,7 @@ class Lines {
     // console.log('Lines.js', 'curve.getLength()', curve.getLength());
     // console.log('Lines.js', 'this.getVolumeOfBoundingBox(curveObject.geometry.boundingBox)', this.getVolumeOfBoundingBox(curveObject.geometry.boundingBox));
 
+    // If volume of bounding box is too small we abort
     if (this.getVolumeOfBoundingBox(curveObject.geometry.boundingBox) < 3000) {
       return null;
     }
@@ -252,6 +255,11 @@ class Lines {
       const elapsed = clock.getElapsedTime();
 
       curveObjects.forEach((curveObject, index) => {
+
+        /**
+         * Using the color of a line as a seed for generating the start and end points of the sub-line being drawn.
+         */
+        
         const color = curveObject.material.uniforms.color.value.getHex();
         curveObject.material.uniforms.visibility.value = MathUtils.map(noise.simplex2(color / 50, elapsed / 10), -1, 1, 0.5, 0.95);
         curveObject.material.uniforms.start.value = MathUtils.map(noise.simplex2(color / 250, elapsed / 5), -1, 1, 0.05, 0.45);
@@ -263,7 +271,11 @@ class Lines {
     }
   }
 
-  getPos(radius) {
+  /**
+   * Generates a random point on a sphere of supplied radius
+   */
+  
+  getPosOnSphere(radius) {
     const pos = new THREE.Vector3();
     pos.x = THREE.Math.randFloatSpread(1000);
     pos.y = THREE.Math.randFloatSpread(1000);
@@ -273,6 +285,11 @@ class Lines {
 
     return pos;
   }
+
+  /**
+   * Returns a color object from supplied Hue, Saturatio and Lightness.
+   */
+  
 
   getColor(h = Math.random(), s = defaults.color.s, l = defaults.color.l) {
     // console.log('Lines.js', `h: ${h} s: ${s} l: ${l}`);
