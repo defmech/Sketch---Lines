@@ -23,6 +23,9 @@ I usually use [Window Resizer for Chrome](https://chrome.google.com/webstore/det
 ## Libraries
 
 [THREE.js](https://threejs.org)
+
 [NOISE!](https://github.com/josephg/noisejs)
+
 [MeshLine](https://github.com/spite/THREE.MeshLine) - Slightly modified
+
 [CCapture.js](https://github.com/spite/ccapture.js)
