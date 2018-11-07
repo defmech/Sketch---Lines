@@ -41,8 +41,8 @@ let paused;
 
 class Lines {
 	constructor() {
-		// const seed = THREE.Math.randInt(1, 65536);
-		const seed = 34974;
+		const seed = THREE.Math.randInt(1, 65536);
+		// const seed = 34974;
 
 		console.log(`Seed: ${seed}`);
 
@@ -92,7 +92,7 @@ class Lines {
 		sc.init();
 		sc.gui.add(this, "drawPaused");
 
-		const howManyLines = 50;
+		const howManyLines = 30;
 
 		let color;
 		let radius;
@@ -236,7 +236,7 @@ class Lines {
 			// dashOffset: 0,
 			// dashRatio: 0.5,
 			map: this.map,
-			opacity: 0.6,
+			opacity: 0.4,
 			resolution: sc.resolution,
 			// dashArray: new THREE.Vector2(10, 5),
 			sizeAttenuation: true,

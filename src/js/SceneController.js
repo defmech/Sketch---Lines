@@ -69,7 +69,7 @@ class SceneController {
 			this.renderer.domElement
 		);
 		this.controls.autoRotate = true;
-		this.controls.autoRotateSpeed = 0.5;
+		this.controls.autoRotateSpeed = 0.25;
 		this.controls.minDistance = 25;
 		this.controls.maxDistance = 65;
 		this.controls.enableDamping = true;
